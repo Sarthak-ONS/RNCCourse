@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform,
   FlatList,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 
@@ -17,6 +18,11 @@ export default function App() {
 
   const addGoalHandler = () =>
     setGoals((currentGoals) => [...currentGoals, enteredGoal]);
+
+  const removeGoalHandler = (goalIndex) =>
+    setGoals((currentGoals) =>
+      currentGoals.filter((_, index) => index !== goalIndex)
+    );
 
   return (
     <View style={styles.appContainer}>
@@ -39,9 +45,17 @@ export default function App() {
         <FlatList
           data={goals}
           renderItem={({ item, index }) => (
-            <Text style={styles.goalStyle} key={index}>
-              {item}
-            </Text>
+            <Pressable
+              style={styles.goalStyle}
+              android_ripple={{
+                color: "#dddddd",
+              }}
+              onPress={() => removeGoalHandler(index)}
+            >
+              <Text style={styles.goalText} key={index}>
+                {item}
+              </Text>
+            </Pressable>
           )}
           keyExtractor={(_, index) => index.toString()}
         />
@@ -80,10 +94,14 @@ const styles = StyleSheet.create({
     overflow: "scroll",
   },
   goalStyle: {
+    marginVertical: 10,
     padding: 10,
     marginVertical: 10,
     backgroundColor: "#5e0acc",
     borderRadius: 5,
+    color: "white",
+  },
+  goalText: {
     color: "white",
   },
 });
